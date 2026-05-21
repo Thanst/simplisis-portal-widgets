@@ -6,541 +6,690 @@
 <title>Ask Frigya</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
+  /* ============================================================
+     Ask Frigya — Widget Styles
+     ============================================================ */
   :root {
-    /* Frigya Brand Colors */
-    --cypress: #008595;
-    --cypress-dark: #006B78;
-    --siyez: #DAC263;
-    --phrygian-red: #9A452F;
-    --poppy: #E5C9AB;
-    --sky: #C5CFD8;
-    --tuff: #FDEFBC;
-    --clay: #BB7B3B;
-
-    /* Neutrals — match Super.so */
-    --bg: #FFFFFF;
-    --text: #37352F;
-    --text-soft: #787774;
-    --text-muted: #9B9A97;
-    --border: #EBEBEA;
-    --border-soft: #F1F1EF;
-    --hover: #F7F7F5;
+    --cypress-green: #008595;
+    --cypress-green-dark: #006d7a;
+    --cypress-green-light: #e6f3f5;
+    --siyez-yellow: #DAC263;
+    --text-primary: #1a1a1a;
+    --text-secondary: #6b6b6b;
+    --text-tertiary: #9a9a9a;
+    --border-light: #ececec;
+    --border-medium: #d4d4d4;
+    --bg-white: #ffffff;
+    --bg-subtle: #fafafa;
+    --bg-hover: #f5f5f5;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
   html, body {
     height: 100%;
-    overflow-x: hidden;
-  }
-
-  body {
     font-family: 'Source Sans 3', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    background: var(--bg);
-    color: var(--text);
+    background: var(--bg-white);
+    color: var(--text-primary);
     font-size: 15px;
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
-    min-height: 100vh;
   }
 
-  .app {
-    max-width: 720px;
-    margin: 0 auto;
-    padding: 48px 32px 32px;
+  .widget {
     display: flex;
     flex-direction: column;
-    min-height: 100vh;
+    height: 100vh;
+    max-width: 100%;
   }
 
-  /* Header */
+  /* ============================================================
+     HEADER
+     ============================================================ */
   .header {
-    text-align: center;
-    margin-bottom: 40px;
-  }
-
-  .logomark {
-    width: 64px;
-    height: 64px;
-    margin: 0 auto 20px;
-    display: block;
-  }
-
-  h1 {
-    font-weight: 600;
-    font-size: 24px;
-    color: var(--text);
-    letter-spacing: -0.3px;
-    margin-bottom: 6px;
-  }
-
-  .subtitle {
-    color: var(--text-soft);
-    font-size: 14px;
-    font-weight: 400;
-  }
-
-  /* Chat container */
-  .chat {
-    flex: 1;
-    margin-bottom: 16px;
-    min-height: 280px;
-    overflow-y: auto;
-    padding: 4px 2px;
-  }
-
-  .chat::-webkit-scrollbar { width: 6px; }
-  .chat::-webkit-scrollbar-track { background: transparent; }
-  .chat::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
-
-  /* Welcome state */
-  .welcome {
-    text-align: center;
-    padding: 24px 0 8px;
-  }
-
-  .welcome-text {
-    color: var(--text-soft);
-    font-size: 14px;
-    line-height: 1.6;
-    max-width: 440px;
-    margin: 0 auto 28px;
-  }
-
-  /* Suggested prompts */
-  .suggestions {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    max-width: 480px;
-    margin: 0 auto;
-  }
-
-  .suggestion {
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 12px 16px;
-    text-align: left;
-    cursor: pointer;
-    font-family: inherit;
-    font-size: 14px;
-    color: var(--text);
-    transition: all 0.15s ease;
-    line-height: 1.5;
     display: flex;
     align-items: center;
-    gap: 12px;
-  }
-
-  .suggestion:hover {
-    background: var(--hover);
-    border-color: var(--text-muted);
-  }
-
-  .suggestion-icon {
-    width: 16px;
-    height: 16px;
+    justify-content: space-between;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border-light);
+    background: var(--bg-white);
     flex-shrink: 0;
-    opacity: 0.5;
   }
 
-  /* Messages */
-  .message {
-    margin-bottom: 24px;
-    animation: fadeIn 0.25s ease-out;
-  }
-
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(4px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  .message-user {
+  .header-left {
     display: flex;
-    justify-content: flex-end;
+    align-items: center;
+    gap: 10px;
   }
 
-  .message-user .bubble {
-    background: var(--cypress);
-    color: white;
-    padding: 10px 16px;
-    border-radius: 16px 16px 4px 16px;
-    max-width: 80%;
-    font-size: 14.5px;
-    line-height: 1.5;
-  }
-
-  .message-assistant .meta {
-    font-size: 12px;
-    color: var(--text-muted);
-    margin-bottom: 6px;
-    padding-left: 4px;
-    font-weight: 500;
-    letter-spacing: 0.2px;
-  }
-
-  .message-assistant .bubble {
-    background: var(--bg);
-    color: var(--text);
-    padding: 0 4px;
-    font-size: 14.5px;
-    line-height: 1.65;
-    white-space: pre-wrap;
-  }
-
-  /* Loading */
-  .typing {
-    display: inline-flex;
-    gap: 4px;
-    padding: 8px 4px;
-  }
-
-  .typing span {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--cypress);
-    animation: bounce 1.4s infinite ease-in-out;
-    opacity: 0.4;
-  }
-
-  .typing span:nth-child(2) { animation-delay: 0.16s; }
-  .typing span:nth-child(3) { animation-delay: 0.32s; }
-
-  @keyframes bounce {
-    0%, 80%, 100% { transform: scale(0.7); opacity: 0.3; }
-    40% { transform: scale(1); opacity: 1; }
-  }
-
-  /* Input area */
-  .input-area {
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 8px;
-    display: flex;
-    gap: 8px;
-    align-items: flex-end;
-    transition: border-color 0.15s ease;
-  }
-
-  .input-area:focus-within {
-    border-color: var(--cypress);
-  }
-
-  #input {
-    flex: 1;
-    border: none;
-    outline: none;
-    padding: 8px 12px;
-    font-family: inherit;
-    font-size: 15px;
-    color: var(--text);
-    background: transparent;
-    resize: none;
-    min-height: 24px;
-    max-height: 120px;
-    line-height: 1.5;
-  }
-
-  #input::placeholder {
-    color: var(--text-muted);
-  }
-
-  #send {
-    background: var(--cypress);
-    color: white;
-    border: none;
-    border-radius: 8px;
-    width: 36px;
-    height: 36px;
-    cursor: pointer;
-    transition: background 0.15s ease;
+  /* Logo container — Siyez Yellow brand color */
+  .logomark-wrap {
+    width: 32px;
+    height: 32px;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
+    background: #008595;
+    border-radius: 8px;
+    padding: 5px; 
   }
 
-  #send:hover:not(:disabled) {
-    background: var(--cypress-dark);
+  .logomark {
+    width: 100%;
+    height: 100%;
+    /* CSS filter to convert Cypress Green SVG → Siyez Yellow (#DAC263) */
+    /* Filter calculated to map source green to target yellow */
+    filter: brightness(0) saturate(100%) invert(82%) sepia(35%) saturate(531%) hue-rotate(13deg) brightness(91%) contrast(82%);
   }
 
-  #send:disabled {
-    background: var(--text-muted);
-    cursor: not-allowed;
+  .header-title {
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    line-height: 1.2;
   }
 
-  #send svg {
-    width: 16px;
-    height: 16px;
+  .header-subtitle {
+    font-size: 12px;
+    color: var(--text-tertiary);
+    margin-top: 2px;
   }
 
-  /* Top bar */
-  .top-bar {
-    display: flex;
-    justify-content: flex-end;
-    margin-bottom: 12px;
-    min-height: 28px;
-  }
-
-  .reset-btn {
-    background: none;
-    border: none;
-    color: var(--text-muted);
-    padding: 4px 10px;
+  .clear-btn {
+    background: transparent;
+    border: 1px solid var(--border-medium);
+    color: var(--text-secondary);
+    font-size: 12px;
+    padding: 6px 10px;
     border-radius: 6px;
-    font-size: 12px;
-    font-family: inherit;
     cursor: pointer;
-    transition: all 0.15s ease;
-    display: none;
+    font-family: inherit;
+    transition: all 0.15s;
   }
 
-  .reset-btn.visible {
-    display: inline-block;
+  .clear-btn:hover {
+    background: var(--bg-hover);
+    color: var(--text-primary);
   }
 
-  .reset-btn:hover {
-    background: var(--hover);
-    color: var(--text-soft);
+  /* ============================================================
+     MESSAGES AREA
+     ============================================================ */
+  .messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
   }
 
-  /* Footer */
-  .footer-note {
-    text-align: center;
-    margin-top: 24px;
-    padding-top: 20px;
-    border-top: 1px solid var(--border-soft);
-    font-size: 12px;
-    color: var(--text-muted);
+  .message {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
   }
 
-  .footer-note a {
-    color: var(--text-soft);
+  .message-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+  }
+
+  .message.user .message-label {
+    color: var(--text-secondary);
+  }
+
+  .message.assistant .message-label {
+    color: var(--cypress-green);
+  }
+
+  .message-body {
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--text-primary);
+    word-wrap: break-word;
+  }
+
+  .message-body p { margin-bottom: 0.6em; }
+  .message-body p:last-child { margin-bottom: 0; }
+  .message-body ul, .message-body ol { margin: 0.4em 0 0.6em 1.2em; }
+  .message-body li { margin-bottom: 0.3em; }
+  .message-body strong { font-weight: 600; }
+  .message-body em { font-style: italic; }
+
+  /* ============================================================
+     LINKS — clickable, styled
+     ============================================================ */
+  .message-body a {
+    color: var(--cypress-green);
     text-decoration: none;
+    border-bottom: 1px solid var(--cypress-green-light);
+    transition: all 0.15s;
+    font-weight: 500;
   }
 
-  .footer-note a:hover {
-    text-decoration: underline;
+  .message-body a:hover {
+    border-bottom-color: var(--cypress-green);
+    background: var(--cypress-green-light);
   }
 
-  @media (max-width: 600px) {
-    .app { padding: 32px 20px 24px; }
-    h1 { font-size: 20px; }
-    .logomark { width: 56px; height: 56px; }
+  .message-body a::after {
+    content: ' ↗';
+    font-size: 0.85em;
+    opacity: 0.6;
   }
+
+  /* ============================================================
+     LOADING DOTS
+     ============================================================ */
+  .loading {
+    display: flex;
+    gap: 4px;
+    padding: 8px 0;
+  }
+
+  .loading-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--text-tertiary);
+    animation: pulse 1.4s infinite;
+  }
+
+  .loading-dot:nth-child(2) { animation-delay: 0.2s; }
+  .loading-dot:nth-child(3) { animation-delay: 0.4s; }
+
+  @keyframes pulse {
+    0%, 60%, 100% { opacity: 0.3; }
+    30% { opacity: 1; }
+  }
+
+  /* ============================================================
+     SUGGESTIONS
+     ============================================================ */
+  .suggestions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 0 20px 12px;
+    flex-shrink: 0;
+  }
+
+  .suggestion-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--bg-white);
+    border: 1px solid var(--border-light);
+    color: var(--text-secondary);
+    font-size: 13px;
+    padding: 8px 12px;
+    border-radius: 18px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.15s;
+  }
+
+  .suggestion-btn:hover {
+    border-color: var(--cypress-green);
+    color: var(--cypress-green);
+    background: var(--bg-white);
+  }
+
+  .suggestion-btn svg {
+    width: 14px;
+    height: 14px;
+    stroke-width: 1.5;
+  }
+
+  /* ============================================================
+     INPUT AREA
+     ============================================================ */
+  .input-area {
+    padding: 12px 20px 20px;
+    border-top: 1px solid var(--border-light);
+    background: var(--bg-white);
+    flex-shrink: 0;
+  }
+
+  .input-wrap {
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+    background: var(--bg-subtle);
+    border: 1px solid var(--border-light);
+    border-radius: 12px;
+    padding: 10px 12px;
+    transition: border-color 0.15s;
+  }
+
+  .input-wrap:focus-within {
+    border-color: var(--cypress-green);
+    background: var(--bg-white);
+  }
+
+  textarea {
+    flex: 1;
+    border: none;
+    background: transparent;
+    resize: none;
+    font-family: inherit;
+    font-size: 15px;
+    line-height: 1.5;
+    color: var(--text-primary);
+    outline: none;
+    max-height: 120px;
+    min-height: 22px;
+  }
+
+  textarea::placeholder { color: var(--text-tertiary); }
+
+  .send-btn {
+    background: var(--cypress-green);
+    border: none;
+    color: white;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: background 0.15s;
+  }
+
+  .send-btn:hover:not(:disabled) { background: var(--cypress-green-dark); }
+  .send-btn:disabled { background: var(--border-medium); cursor: not-allowed; }
+
+  .send-btn svg { width: 16px; height: 16px; }
+
+  /* ============================================================
+     SCROLLBAR
+     ============================================================ */
+  .messages::-webkit-scrollbar { width: 6px; }
+  .messages::-webkit-scrollbar-track { background: transparent; }
+  .messages::-webkit-scrollbar-thumb {
+    background: var(--border-medium);
+    border-radius: 3px;
+  }
+  .messages::-webkit-scrollbar-thumb:hover { background: var(--text-tertiary); }
 </style>
 </head>
 <body>
 
-<div class="app">
+<div class="widget">
 
+  <!-- HEADER -->
   <div class="header">
-    <img class="logomark" src="https://assets.super.so/d1eb9130-5791-4a8f-be17-c8c9d8adb86f/images/ff532fa7-e040-4120-bca3-dff99e61cb05/logomark_cypress_green.svg" alt="Frigya">
-    <h1>Ask Frigya</h1>
-    <p class="subtitle">Your brand voice assistant</p>
-  </div>
-
-  <div class="top-bar">
-    <button class="reset-btn" id="reset" onclick="resetChat()">Start over</button>
-  </div>
-
-  <div class="chat" id="chat">
-    <div class="welcome" id="welcome">
-      <p class="welcome-text">
-        Need help writing on-brand? I can draft captions, welcome messages, check tone of voice, or answer questions about the Frigya brand.
-      </p>
-
-      <div class="suggestions">
-        <button class="suggestion" onclick="sendSuggestion('Write an Instagram caption for our morning Kahvaltı breakfast — feature Siyez bread and our valley view.')">
-          <svg class="suggestion-icon" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M3 5h10M3 8h10M3 11h7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-          </svg>
-          Write an Instagram caption for Kahvaltı breakfast
-        </button>
-        <button class="suggestion" onclick="sendSuggestion('Draft a warm welcome message for a guest checking in for the first time.')">
-          <svg class="suggestion-icon" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M8 1.5L9.5 5.5L13.5 5.5L10.5 8L11.5 12L8 9.5L4.5 12L5.5 8L2.5 5.5L6.5 5.5L8 1.5Z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/>
-          </svg>
-          Draft a welcome message for a new guest
-        </button>
-        <button class="suggestion" onclick="sendSuggestion('When should I use Cypress Green vs Phrygian Red? Give me practical examples.')">
-          <svg class="suggestion-icon" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="5" cy="8" r="3.5" stroke="currentColor" stroke-width="1.3"/>
-            <circle cx="11" cy="8" r="3.5" stroke="currentColor" stroke-width="1.3"/>
-          </svg>
-          When to use Cypress Green vs Phrygian Red
-        </button>
-        <button class="suggestion" onclick="sendSuggestion('Suggest 3 ways to describe our cypress trees that match our brand voice.')">
-          <svg class="suggestion-icon" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M8 2L5 6h2L4.5 10h3L5 14h6l-2.5-4h3L11 6h2L8 2z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/>
-          </svg>
-          Describe our cypress trees, on-brand
-        </button>
+    <div class="header-left">
+      <div class="logomark-wrap">
+        <img class="logomark" src="https://assets.super.so/d1eb9130-5791-4a8f-be17-c8c9d8adb86f/images/ff532fa7-e040-4120-bca3-dff99e61cb05/logomark_cypress_green.svg" alt="Frigya">
+      </div>
+      <div>
+        <div class="header-title">Ask Frigya</div>
+        <div class="header-subtitle">Brand assistant</div>
       </div>
     </div>
+    <button class="clear-btn" id="clearBtn" title="Start fresh conversation">Clear</button>
   </div>
 
-  <div class="input-area">
-    <textarea id="input" placeholder="Ask Frigya anything about the brand…" rows="1"></textarea>
-    <button id="send" onclick="sendMessage()" aria-label="Send">
-      <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M2 8L14 2L8 14L6.5 9.5L2 8Z" fill="currentColor"/>
-      </svg>
+  <!-- MESSAGES -->
+  <div class="messages" id="messages"></div>
+
+  <!-- SUGGESTIONS (hidden after first message) -->
+  <div class="suggestions" id="suggestions">
+    <button class="suggestion-btn" data-prompt="Write an Instagram caption for a Siyez wheat breakfast photo">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 1 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+      Write a caption
+    </button>
+    <button class="suggestion-btn" data-prompt="What are Frigya's brand colours?">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="13.5" cy="6.5" r=".5"/><circle cx="17.5" cy="10.5" r=".5"/><circle cx="8.5" cy="7.5" r=".5"/><circle cx="6.5" cy="12.5" r=".5"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg>
+      Brand colours
+    </button>
+    <button class="suggestion-btn" data-prompt="Send me the Canva templates">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+      Canva templates
     </button>
   </div>
 
-  <div class="footer-note">
-    Powered by <a href="https://www.simplisisdesign.com" target="_blank">Simplisis</a> · For Frigya Organik internal use
+  <!-- INPUT -->
+  <div class="input-area">
+    <div class="input-wrap">
+      <textarea id="input" placeholder="Ask me anything about the brand..." rows="1"></textarea>
+      <button class="send-btn" id="sendBtn" disabled>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </button>
+    </div>
   </div>
 
 </div>
 
 <script>
-  // 🔗 Cloudflare Worker endpoint
-  const WORKER_URL = 'https://ask-frigya.thoetphong.workers.dev';
+// ============================================================================
+// CONFIG
+// ============================================================================
+const WORKER_URL = 'https://ask-frigya.thoetphong.workers.dev';
+const STORAGE_KEY = 'frigya_chat_history';
+const INTERNAL_DOMAIN = 'simplisisdesign.com';
 
-  let conversationHistory = [];
-  let isLoading = false;
-  const chatEl = document.getElementById('chat');
-  const welcomeEl = document.getElementById('welcome');
-  const inputEl = document.getElementById('input');
-  const sendBtn = document.getElementById('send');
-  const resetBtn = document.getElementById('reset');
+// ============================================================================
+// STATE
+// ============================================================================
+let messages = [];
+let isLoading = false;
 
-  inputEl.addEventListener('input', () => {
-    inputEl.style.height = 'auto';
-    inputEl.style.height = Math.min(inputEl.scrollHeight, 120) + 'px';
-  });
+// ============================================================================
+// DOM REFS
+// ============================================================================
+const $messages = document.getElementById('messages');
+const $input = document.getElementById('input');
+const $sendBtn = document.getElementById('sendBtn');
+const $clearBtn = document.getElementById('clearBtn');
+const $suggestions = document.getElementById('suggestions');
 
-  inputEl.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      sendMessage();
+// ============================================================================
+// STORAGE — localStorage persistence
+// ============================================================================
+function saveHistory() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(messages));
+  } catch (e) {
+    console.warn('localStorage save failed:', e);
+  }
+}
+
+function loadHistory() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch (e) {
+    console.warn('localStorage load failed:', e);
+    return [];
+  }
+}
+
+function clearHistory() {
+  messages = [];
+  localStorage.removeItem(STORAGE_KEY);
+  $messages.innerHTML = '';
+  $suggestions.style.display = 'flex';
+}
+
+// ============================================================================
+// MARKDOWN PARSER (links, bold, italic, lists, paragraphs)
+// ============================================================================
+function escapeHtml(s) {
+  return s
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function renderMarkdown(text) {
+  let html = escapeHtml(text);
+
+  // Markdown links: [text](url) → <a> with smart target
+  // Internal (*.simplisisdesign.com) → target="_top" (parent window, same tab)
+  // External → target="_blank" (new tab)
+  html = html.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, (match, label, url) => {
+    const isInternal = url.includes(INTERNAL_DOMAIN);
+    if (isInternal) {
+      return `<a href="${url}" target="_top">${label}</a>`;
+    } else {
+      return `<a href="${url}" target="_blank" rel="noopener noreferrer">${label}</a>`;
     }
   });
 
-  function sendSuggestion(text) {
-    inputEl.value = text;
-    sendMessage();
-  }
-
-  function addUserMessage(text) {
-    if (welcomeEl) welcomeEl.style.display = 'none';
-    resetBtn.classList.add('visible');
-    const div = document.createElement('div');
-    div.className = 'message message-user';
-    div.innerHTML = `<div class="bubble">${escapeHtml(text)}</div>`;
-    chatEl.appendChild(div);
-    chatEl.scrollTop = chatEl.scrollHeight;
-  }
-
-  function addAssistantMessage(text) {
-    const div = document.createElement('div');
-    div.className = 'message message-assistant';
-    div.innerHTML = `
-      <div class="meta">FRIGYA</div>
-      <div class="bubble">${escapeHtml(text)}</div>
-    `;
-    chatEl.appendChild(div);
-    chatEl.scrollTop = chatEl.scrollHeight;
-  }
-
-  function showTyping() {
-    const div = document.createElement('div');
-    div.className = 'message message-assistant';
-    div.id = 'typing-indicator';
-    div.innerHTML = `
-      <div class="meta">FRIGYA</div>
-      <div class="typing"><span></span><span></span><span></span></div>
-    `;
-    chatEl.appendChild(div);
-    chatEl.scrollTop = chatEl.scrollHeight;
-  }
-
-  function removeTyping() {
-    const el = document.getElementById('typing-indicator');
-    if (el) el.remove();
-  }
-
-  function escapeHtml(text) {
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
-  }
-
-  function resetChat() {
-    conversationHistory = [];
-    chatEl.innerHTML = '';
-    if (welcomeEl) {
-      welcomeEl.style.display = 'block';
-      chatEl.appendChild(welcomeEl);
+  // Defensive: auto-link bare URLs (in case AI still outputs raw URL)
+  html = html.replace(
+    /(?<!["'>=])(https?:\/\/[^\s<]+)/g,
+    (url) => {
+      const isInternal = url.includes(INTERNAL_DOMAIN);
+      const target = isInternal ? '_top' : '_blank';
+      const rel = isInternal ? '' : ' rel="noopener noreferrer"';
+      return `<a href="${url}" target="${target}"${rel}>${url}</a>`;
     }
-    resetBtn.classList.remove('visible');
-    inputEl.focus();
-  }
+  );
 
-  async function sendMessage() {
-    if (isLoading) return;
-    const text = inputEl.value.trim();
-    if (!text) return;
+  // Bold: **text** → <strong>
+  html = html.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
 
-    isLoading = true;
-    sendBtn.disabled = true;
+  // Italic: *text* → <em>
+  html = html.replace(/(?<!\*)\*(?!\*)([^*\n]+)\*(?!\*)/g, '<em>$1</em>');
 
-    addUserMessage(text);
-    inputEl.value = '';
-    inputEl.style.height = 'auto';
+  // Bullet lists
+  const lines = html.split('\n');
+  const result = [];
+  let inList = false;
 
-    conversationHistory.push({ role: 'user', content: text });
-    showTyping();
-
-    try {
-      const response = await fetch(WORKER_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages: conversationHistory })
-      });
-
-      const data = await response.json();
-      removeTyping();
-
-      if (data.error || data.type === 'error') {
-        const errMsg = data.error?.message || data.error || 'Unknown error';
-        addAssistantMessage("Something went wrong. " + errMsg);
-        conversationHistory.pop();
-        return;
+  for (const line of lines) {
+    const bulletMatch = line.match(/^[\-\*]\s+(.+)$/);
+    if (bulletMatch) {
+      if (!inList) {
+        result.push('<ul>');
+        inList = true;
       }
-
-      const reply = data.content
-        ?.filter(b => b.type === 'text')
-        .map(b => b.text)
-        .join('\n') || '';
-
-      if (reply) {
-        addAssistantMessage(reply);
-        conversationHistory.push({ role: 'assistant', content: reply });
+      result.push(`<li>${bulletMatch[1]}</li>`);
+    } else {
+      if (inList) {
+        result.push('</ul>');
+        inList = false;
+      }
+      if (line.trim() === '') {
+        result.push('');
       } else {
-        addAssistantMessage("I couldn't generate a response. Please try again.");
-        conversationHistory.pop();
+        result.push(line);
       }
-    } catch (err) {
-      removeTyping();
-      addAssistantMessage("Connection issue. Please try again in a moment.\n\n" + err.message);
-      conversationHistory.pop();
-      console.error(err);
-    } finally {
-      isLoading = false;
-      sendBtn.disabled = false;
-      inputEl.focus();
     }
   }
+  if (inList) result.push('</ul>');
 
-  inputEl.focus();
+  html = result.join('\n');
+
+  // Wrap blocks in <p>
+  const blocks = html.split(/\n\s*\n/);
+  html = blocks.map(b => {
+    const trimmed = b.trim();
+    if (!trimmed) return '';
+    if (trimmed.startsWith('<ul>') || trimmed.startsWith('<ol>')) return trimmed;
+    return `<p>${trimmed.replace(/\n/g, '<br>')}</p>`;
+  }).join('');
+
+  return html;
+}
+
+// ============================================================================
+// RENDER
+// ============================================================================
+function renderMessage(role, content) {
+  const wrap = document.createElement('div');
+  wrap.className = `message ${role}`;
+
+  const label = document.createElement('div');
+  label.className = 'message-label';
+  label.textContent = role === 'user' ? 'YOU' : 'FRIGYA';
+
+  const body = document.createElement('div');
+  body.className = 'message-body';
+  body.innerHTML = renderMarkdown(content);
+
+  wrap.appendChild(label);
+  wrap.appendChild(body);
+  $messages.appendChild(wrap);
+  scrollToBottom();
+}
+
+function renderLoading() {
+  const wrap = document.createElement('div');
+  wrap.className = 'message assistant';
+  wrap.id = 'loading-msg';
+
+  const label = document.createElement('div');
+  label.className = 'message-label';
+  label.textContent = 'FRIGYA';
+
+  const loading = document.createElement('div');
+  loading.className = 'loading';
+  loading.innerHTML = '<div class="loading-dot"></div><div class="loading-dot"></div><div class="loading-dot"></div>';
+
+  wrap.appendChild(label);
+  wrap.appendChild(loading);
+  $messages.appendChild(wrap);
+  scrollToBottom();
+}
+
+function removeLoading() {
+  const el = document.getElementById('loading-msg');
+  if (el) el.remove();
+}
+
+function scrollToBottom() {
+  requestAnimationFrame(() => {
+    $messages.scrollTop = $messages.scrollHeight;
+  });
+}
+
+// ============================================================================
+// API CALL — parses Anthropic API response shape
+// ============================================================================
+async function sendMessage(userText) {
+  if (isLoading || !userText.trim()) return;
+
+  $suggestions.style.display = 'none';
+
+  const userMsg = { role: 'user', content: userText.trim() };
+  messages.push(userMsg);
+  renderMessage('user', userText.trim());
+  saveHistory();
+
+  isLoading = true;
+  $sendBtn.disabled = true;
+  renderLoading();
+
+  try {
+    const res = await fetch(WORKER_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ messages }),
+    });
+
+    removeLoading();
+
+    if (!res.ok) {
+      const errText = await res.text();
+      throw new Error(`API error (${res.status}): ${errText}`);
+    }
+
+    const data = await res.json();
+
+    // Worker returns the full Anthropic API response.
+    // Extract text from content array.
+    let reply = '';
+    if (data.content && Array.isArray(data.content)) {
+      reply = data.content
+        .filter(block => block.type === 'text')
+        .map(block => block.text)
+        .join('\n');
+    } else if (data.error) {
+      throw new Error(data.error);
+    }
+
+    if (!reply) reply = 'Sorry, I could not generate a response.';
+
+    const assistantMsg = { role: 'assistant', content: reply };
+    messages.push(assistantMsg);
+    renderMessage('assistant', reply);
+    saveHistory();
+  } catch (err) {
+    removeLoading();
+    const errMsg = `Sorry, something went wrong. ${err.message}`;
+    renderMessage('assistant', errMsg);
+    console.error(err);
+  } finally {
+    isLoading = false;
+    updateSendButton();
+  }
+}
+
+// ============================================================================
+// INPUT HANDLERS
+// ============================================================================
+function updateSendButton() {
+  $sendBtn.disabled = isLoading || !$input.value.trim();
+}
+
+function autoResize() {
+  $input.style.height = 'auto';
+  $input.style.height = Math.min($input.scrollHeight, 120) + 'px';
+}
+
+$input.addEventListener('input', () => {
+  updateSendButton();
+  autoResize();
+});
+
+$input.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    const text = $input.value;
+    if (text.trim() && !isLoading) {
+      $input.value = '';
+      autoResize();
+      updateSendButton();
+      sendMessage(text);
+    }
+  }
+});
+
+$sendBtn.addEventListener('click', () => {
+  const text = $input.value;
+  if (text.trim() && !isLoading) {
+    $input.value = '';
+    autoResize();
+    updateSendButton();
+    sendMessage(text);
+  }
+});
+
+$clearBtn.addEventListener('click', () => {
+  if (messages.length === 0) return;
+  if (confirm('Clear conversation history?')) {
+    clearHistory();
+  }
+});
+
+// Suggestion buttons
+document.querySelectorAll('.suggestion-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const prompt = btn.dataset.prompt;
+    sendMessage(prompt);
+  });
+});
+
+// ============================================================================
+// INIT — Restore history on load
+// ============================================================================
+function init() {
+  const saved = loadHistory();
+  if (saved.length > 0) {
+    messages = saved;
+    $suggestions.style.display = 'none';
+    saved.forEach(m => renderMessage(m.role, m.content));
+  }
+}
+
+init();
 </script>
 
 </body>
