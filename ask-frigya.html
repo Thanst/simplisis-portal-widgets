@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,15 +16,17 @@
     --cypress-green: #008595;
     --cypress-green-dark: #006d7a;
     --cypress-green-light: #e6f3f5;
+    --cypress-green-bubble: #d9eef1;
     --siyez-yellow: #DAC263;
-    --text-primary: #1a1a1a;
-    --text-secondary: #6b6b6b;
-    --text-tertiary: #9a9a9a;
-    --border-light: #ececec;
-    --border-medium: #d4d4d4;
-    --bg-white: #ffffff;
-    --bg-subtle: #fafafa;
-    --bg-hover: #f5f5f5;
+    --tuff-stone: #FDEFBC;
+    --tuff-stone-soft: #FEF9E1;
+    --text-primary: #008595;
+    --text-secondary: #4a8e95;
+    --text-tertiary: #8ab3b8;
+    --border-light: #f0e8c8;
+    --border-medium: #d6c9a0;
+    --bg-white: #FEF9E1;
+    --bg-hover: #FAEFCB;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -43,6 +46,7 @@
     flex-direction: column;
     height: 100vh;
     max-width: 100%;
+    background: var(--bg-white);
   }
 
   /* ============================================================
@@ -51,7 +55,6 @@
   .header {
     display: flex;
     align-items: center;
-    justify-content: space-between;
     padding: 16px 20px;
     border-bottom: 1px solid var(--border-light);
     background: var(--bg-white);
@@ -64,7 +67,6 @@
     gap: 10px;
   }
 
-  /* Logo container — Siyez Yellow brand color */
   .logomark-wrap {
     width: 32px;
     height: 32px;
@@ -74,14 +76,12 @@
     flex-shrink: 0;
     background: #008595;
     border-radius: 8px;
-    padding: 5px; 
+    padding: 5px;
   }
 
   .logomark {
     width: 100%;
     height: 100%;
-    /* CSS filter to convert Cypress Green SVG → Siyez Yellow (#DAC263) */
-    /* Filter calculated to map source green to target yellow */
     filter: brightness(0) saturate(100%) invert(96%) sepia(18%) saturate(736%) hue-rotate(335deg) brightness(102%) contrast(98%);
   }
 
@@ -90,29 +90,13 @@
     font-weight: 600;
     letter-spacing: -0.01em;
     line-height: 1.2;
+    color: var(--cypress-green-dark);
   }
 
   .header-subtitle {
     font-size: 12px;
     color: var(--text-tertiary);
     margin-top: 2px;
-  }
-
-  .clear-btn {
-    background: transparent;
-    border: 1px solid var(--border-medium);
-    color: var(--text-secondary);
-    font-size: 12px;
-    padding: 6px 10px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-family: inherit;
-    transition: all 0.15s;
-  }
-
-  .clear-btn:hover {
-    background: var(--bg-hover);
-    color: var(--text-primary);
   }
 
   /* ============================================================
@@ -125,6 +109,7 @@
     display: flex;
     flex-direction: column;
     gap: 20px;
+    background: var(--bg-white);
   }
 
   .message {
@@ -156,6 +141,20 @@
     word-wrap: break-word;
   }
 
+  /* USER MESSAGE — subtle green bubble */
+  .message.user .message-body {
+    background: var(--cypress-green-bubble);
+    padding: 10px 14px;
+    border-radius: 10px;
+    color: var(--cypress-green-dark);
+  }
+
+  /* ASSISTANT MESSAGE — no bubble */
+  .message.assistant .message-body {
+    background: transparent;
+    padding: 0;
+  }
+
   .message-body p { margin-bottom: 0.6em; }
   .message-body p:last-child { margin-bottom: 0; }
   .message-body ul, .message-body ol { margin: 0.4em 0 0.6em 1.2em; }
@@ -164,25 +163,39 @@
   .message-body em { font-style: italic; }
 
   /* ============================================================
-     LINKS — clickable, styled
+     LINKS — Button style
      ============================================================ */
   .message-body a {
-    color: var(--cypress-green);
+    display: inline-block;
+    background: var(--cypress-green);
+    color: #FDEFBC;
     text-decoration: none;
-    border-bottom: 1px solid var(--cypress-green-light);
+    border: none;
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 14px;
     transition: all 0.15s;
-    font-weight: 500;
+    margin: 2px 4px 2px 0;
+    line-height: 1.4;
   }
 
   .message-body a:hover {
-    border-bottom-color: var(--cypress-green);
-    background: var(--cypress-green-light);
+    background: var(--cypress-green-dark);
+    color: #FDEFBC;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 6px rgba(0, 133, 149, 0.25);
   }
 
   .message-body a::after {
     content: ' ↗';
     font-size: 0.85em;
-    opacity: 0.6;
+    opacity: 0.8;
+    margin-left: 2px;
+  }
+
+  .message-body li a {
+    margin: 0;
   }
 
   /* ============================================================
@@ -211,14 +224,27 @@
   }
 
   /* ============================================================
-     SUGGESTIONS
+     SUGGESTIONS — Horizontally scrollable, 2 rows
      ============================================================ */
+  .suggestions-wrap {
+    padding: 0 20px 12px;
+    flex-shrink: 0;
+    background: var(--bg-white);
+  }
+
+  .suggestions-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+    margin-bottom: 8px;
+  }
+
   .suggestions {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
-    padding: 0 20px 12px;
-    flex-shrink: 0;
+    gap: 6px;
   }
 
   .suggestion-btn {
@@ -226,30 +252,33 @@
     align-items: center;
     gap: 6px;
     background: var(--bg-white);
-    border: 1px solid var(--border-light);
-    color: var(--text-secondary);
+    border: 1px solid var(--border-medium);
+    color: var(--cypress-green);
     font-size: 13px;
-    padding: 8px 12px;
-    border-radius: 18px;
+    padding: 7px 11px;
+    border-radius: 16px;
     cursor: pointer;
     font-family: inherit;
     transition: all 0.15s;
+    line-height: 1.3;
+    text-align: left;
   }
 
   .suggestion-btn:hover {
     border-color: var(--cypress-green);
-    color: var(--cypress-green);
-    background: var(--bg-white);
+    background: var(--cypress-green-bubble);
+    color: var(--cypress-green-dark);
   }
 
   .suggestion-btn svg {
-    width: 14px;
-    height: 14px;
-    stroke-width: 1.5;
+    width: 13px;
+    height: 13px;
+    stroke-width: 1.6;
+    flex-shrink: 0;
   }
 
   /* ============================================================
-     INPUT AREA
+     INPUT AREA — White BG when idle
      ============================================================ */
   .input-area {
     padding: 12px 20px 20px;
@@ -262,16 +291,17 @@
     display: flex;
     align-items: flex-end;
     gap: 8px;
-    background: var(--bg-subtle);
-    border: 1px solid var(--border-light);
+    background: #ffffff;
+    border: 1px solid var(--border-medium);
     border-radius: 12px;
     padding: 10px 12px;
-    transition: border-color 0.15s;
+    transition: all 0.15s;
   }
 
   .input-wrap:focus-within {
     border-color: var(--cypress-green);
-    background: var(--bg-white);
+    background: #ffffff;
+    box-shadow: 0 0 0 3px rgba(0, 133, 149, 0.08);
   }
 
   textarea {
@@ -282,7 +312,7 @@
     font-family: inherit;
     font-size: 15px;
     line-height: 1.5;
-    color: var(--text-primary);
+    color: var(--cypress-green-dark);
     outline: none;
     max-height: 120px;
     min-height: 22px;
@@ -293,7 +323,7 @@
   .send-btn {
     background: var(--cypress-green);
     border: none;
-    color: white;
+    color: #FDEFBC;
     width: 32px;
     height: 32px;
     border-radius: 8px;
@@ -306,7 +336,7 @@
   }
 
   .send-btn:hover:not(:disabled) { background: var(--cypress-green-dark); }
-  .send-btn:disabled { background: var(--border-medium); cursor: not-allowed; }
+  .send-btn:disabled { background: var(--border-medium); cursor: not-allowed; color: #fff; }
 
   .send-btn svg { width: 16px; height: 16px; }
 
@@ -319,14 +349,14 @@
     background: var(--border-medium);
     border-radius: 3px;
   }
-  .messages::-webkit-scrollbar-thumb:hover { background: var(--text-tertiary); }
+  .messages::-webkit-scrollbar-thumb:hover { background: var(--cypress-green); }
 </style>
 </head>
 <body>
 
 <div class="widget">
 
-  <!-- HEADER -->
+  <!-- HEADER (no Clear button — too close to modal close) -->
   <div class="header">
     <div class="header-left">
       <div class="logomark-wrap">
@@ -337,26 +367,67 @@
         <div class="header-subtitle">Brand assistant</div>
       </div>
     </div>
-    <button class="clear-btn" id="clearBtn" title="Start fresh conversation">Clear</button>
   </div>
 
   <!-- MESSAGES -->
   <div class="messages" id="messages"></div>
 
-  <!-- SUGGESTIONS (hidden after first message) -->
-  <div class="suggestions" id="suggestions">
-    <button class="suggestion-btn" data-prompt="Write an Instagram caption for a Siyez wheat breakfast photo">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 1 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-      Write a caption
-    </button>
-    <button class="suggestion-btn" data-prompt="What are Frigya's brand colours?">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="13.5" cy="6.5" r=".5"/><circle cx="17.5" cy="10.5" r=".5"/><circle cx="8.5" cy="7.5" r=".5"/><circle cx="6.5" cy="12.5" r=".5"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg>
-      Brand colours
-    </button>
-    <button class="suggestion-btn" data-prompt="Send me the Canva templates">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
-      Canva templates
-    </button>
+  <!-- SUGGESTIONS -->
+  <div class="suggestions-wrap" id="suggestionsWrap">
+    <div class="suggestions-label">Try asking</div>
+    <div class="suggestions" id="suggestions">
+
+      <button class="suggestion-btn" data-prompt="What is Frigya Organik in one sentence? I'm new here and want to understand the brand.">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+        What is Frigya?
+      </button>
+
+      <button class="suggestion-btn" data-prompt="Write a warm welcome message for a guest checking in for the first time">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+        Welcome message
+      </button>
+
+      <button class="suggestion-btn" data-prompt="Write an Instagram caption for our morning Kahvaltı (Turkish breakfast)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 1 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+        Write a caption
+      </button>
+
+      <button class="suggestion-btn" data-prompt="Send me the Canva templates for Instagram">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+        Canva templates
+      </button>
+
+      <button class="suggestion-btn" data-prompt="What are Frigya's brand colours? Give me the HEX and Pantone codes.">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="13.5" cy="6.5" r=".5"/><circle cx="17.5" cy="10.5" r=".5"/><circle cx="8.5" cy="7.5" r=".5"/><circle cx="6.5" cy="12.5" r=".5"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg>
+        Brand colours
+      </button>
+
+      <button class="suggestion-btn" data-prompt="I need the logo files — where do I find SVG, AI, and PNG?">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        Logo files
+      </button>
+
+      <button class="suggestion-btn" data-prompt="Is the phrase 'luxury rural retreat' on-brand for Frigya? If not, suggest better alternatives.">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        Check my copy
+      </button>
+
+      <button class="suggestion-btn" data-prompt="What words should I use and avoid when writing about Frigya? Give me a quick cheat sheet.">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2zM22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+        Brand voice tips
+      </button>
+
+      <button class="suggestion-btn" data-prompt="What's the difference between Cypress Green and Siyez Yellow — when do I use each one?">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 0 0 20"/></svg>
+        Colour usage
+      </button>
+
+      <button class="suggestion-btn" data-prompt="Show me the Brand Guidelines PDF — I need to read the full manual">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2zM22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+        Brand manual
+      </button>
+
+    </div>
   </div>
 
   <!-- INPUT -->
@@ -391,11 +462,10 @@ let isLoading = false;
 const $messages = document.getElementById('messages');
 const $input = document.getElementById('input');
 const $sendBtn = document.getElementById('sendBtn');
-const $clearBtn = document.getElementById('clearBtn');
-const $suggestions = document.getElementById('suggestions');
+const $suggestionsWrap = document.getElementById('suggestionsWrap');
 
 // ============================================================================
-// STORAGE — localStorage persistence
+// STORAGE
 // ============================================================================
 function saveHistory() {
   try {
@@ -417,15 +487,8 @@ function loadHistory() {
   }
 }
 
-function clearHistory() {
-  messages = [];
-  localStorage.removeItem(STORAGE_KEY);
-  $messages.innerHTML = '';
-  $suggestions.style.display = 'flex';
-}
-
 // ============================================================================
-// MARKDOWN PARSER (links, bold, italic, lists, paragraphs)
+// MARKDOWN PARSER
 // ============================================================================
 function escapeHtml(s) {
   return s
@@ -439,9 +502,7 @@ function escapeHtml(s) {
 function renderMarkdown(text) {
   let html = escapeHtml(text);
 
-  // Markdown links: [text](url) → <a> with smart target
-  // Internal (*.simplisisdesign.com) → target="_top" (parent window, same tab)
-  // External → target="_blank" (new tab)
+  // Markdown links — smart target
   html = html.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, (match, label, url) => {
     const isInternal = url.includes(INTERNAL_DOMAIN);
     if (isInternal) {
@@ -451,7 +512,7 @@ function renderMarkdown(text) {
     }
   });
 
-  // Defensive: auto-link bare URLs (in case AI still outputs raw URL)
+  // Defensive bare URL autolink
   html = html.replace(
     /(?<!["'>=])(https?:\/\/[^\s<]+)/g,
     (url) => {
@@ -462,10 +523,7 @@ function renderMarkdown(text) {
     }
   );
 
-  // Bold: **text** → <strong>
   html = html.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
-
-  // Italic: *text* → <em>
   html = html.replace(/(?<!\*)\*(?!\*)([^*\n]+)\*(?!\*)/g, '<em>$1</em>');
 
   // Bullet lists
@@ -497,7 +555,6 @@ function renderMarkdown(text) {
 
   html = result.join('\n');
 
-  // Wrap blocks in <p>
   const blocks = html.split(/\n\s*\n/);
   html = blocks.map(b => {
     const trimmed = b.trim();
@@ -561,12 +618,12 @@ function scrollToBottom() {
 }
 
 // ============================================================================
-// API CALL — parses Anthropic API response shape
+// API CALL
 // ============================================================================
 async function sendMessage(userText) {
   if (isLoading || !userText.trim()) return;
 
-  $suggestions.style.display = 'none';
+  $suggestionsWrap.style.display = 'none';
 
   const userMsg = { role: 'user', content: userText.trim() };
   messages.push(userMsg);
@@ -593,8 +650,6 @@ async function sendMessage(userText) {
 
     const data = await res.json();
 
-    // Worker returns the full Anthropic API response.
-    // Extract text from content array.
     let reply = '';
     if (data.content && Array.isArray(data.content)) {
       reply = data.content
@@ -662,13 +717,6 @@ $sendBtn.addEventListener('click', () => {
   }
 });
 
-$clearBtn.addEventListener('click', () => {
-  if (messages.length === 0) return;
-  if (confirm('Clear conversation history?')) {
-    clearHistory();
-  }
-});
-
 // Suggestion buttons
 document.querySelectorAll('.suggestion-btn').forEach(btn => {
   btn.addEventListener('click', () => {
@@ -684,7 +732,7 @@ function init() {
   const saved = loadHistory();
   if (saved.length > 0) {
     messages = saved;
-    $suggestions.style.display = 'none';
+    $suggestionsWrap.style.display = 'none';
     saved.forEach(m => renderMessage(m.role, m.content));
   }
 }
