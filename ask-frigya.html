@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -74,15 +73,20 @@
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    background: #008595;
+    background: var(--cypress-green);
     border-radius: 8px;
     padding: 5px;
   }
 
+  /* 
+    Logo filter — produces #FDEFBC (tuff-stone cream) from black source.
+    Calculated to closely match the brand cream tone.
+  */
   .logomark {
     width: 100%;
     height: 100%;
-    filter: brightness(0) saturate(100%) invert(96%) sepia(18%) saturate(736%) hue-rotate(335deg) brightness(102%) contrast(98%);
+    filter: brightness(0) saturate(100%) invert(97%) sepia(34%) saturate(636%) 
+            hue-rotate(341deg) brightness(106%) contrast(98%);
   }
 
   .header-title {
@@ -161,6 +165,67 @@
   .message-body li { margin-bottom: 0.3em; }
   .message-body strong { font-weight: 600; }
   .message-body em { font-style: italic; }
+
+  /* ============================================================
+     CODE BLOCKS — for image prompts (copyable)
+     ============================================================ */
+  .message-body pre {
+    background: #fff;
+    border: 1px solid var(--border-medium);
+    border-radius: 8px;
+    padding: 12px 14px;
+    margin: 8px 0;
+    overflow-x: auto;
+    position: relative;
+    font-family: 'SF Mono', Monaco, Consolas, 'Courier New', monospace;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--cypress-green-dark);
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  .message-body code {
+    font-family: 'SF Mono', Monaco, Consolas, 'Courier New', monospace;
+    font-size: 0.9em;
+    background: rgba(0, 133, 149, 0.08);
+    padding: 1px 5px;
+    border-radius: 3px;
+    color: var(--cypress-green-dark);
+  }
+
+  .message-body pre code {
+    background: transparent;
+    padding: 0;
+    font-size: 1em;
+  }
+
+  .copy-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: var(--cypress-green);
+    color: #FDEFBC;
+    border: none;
+    padding: 4px 10px;
+    border-radius: 5px;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'Source Sans 3', sans-serif;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    transition: all 0.15s;
+  }
+
+  .copy-btn:hover {
+    background: var(--cypress-green-dark);
+  }
+
+  .copy-btn.copied {
+    background: var(--siyez-yellow);
+    color: var(--cypress-green-dark);
+  }
 
   /* ============================================================
      LINKS — Button style
@@ -356,7 +421,7 @@
 
 <div class="widget">
 
-  <!-- HEADER (no Clear button — too close to modal close) -->
+  <!-- HEADER -->
   <div class="header">
     <div class="header-left">
       <div class="logomark-wrap">
@@ -392,6 +457,16 @@
         Write a caption
       </button>
 
+      <button class="suggestion-btn" data-prompt="I need an image prompt for an Instagram ad of our siyez bread, 4:5 ratio">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+        Image prompt for IG ad
+      </button>
+
+      <button class="suggestion-btn" data-prompt="Give me a Midjourney prompt for cypress trees at sunset, 9:16 Reel format">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 2L8 8h3v6h2V8h3z"/><path d="M5 22h14"/><path d="M7 22V14"/><path d="M17 22V14"/><circle cx="12" cy="12" r="10" opacity="0.3"/></svg>
+        Midjourney prompt
+      </button>
+
       <button class="suggestion-btn" data-prompt="Send me the Canva templates for Instagram">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
         Canva templates
@@ -410,16 +485,6 @@
       <button class="suggestion-btn" data-prompt="Is the phrase 'luxury rural retreat' on-brand for Frigya? If not, suggest better alternatives.">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
         Check my copy
-      </button>
-
-      <button class="suggestion-btn" data-prompt="What words should I use and avoid when writing about Frigya? Give me a quick cheat sheet.">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2zM22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
-        Brand voice tips
-      </button>
-
-      <button class="suggestion-btn" data-prompt="What's the difference between Cypress Green and Siyez Yellow — when do I use each one?">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 0 0 20"/></svg>
-        Colour usage
       </button>
 
       <button class="suggestion-btn" data-prompt="Show me the Brand Guidelines PDF — I need to read the full manual">
@@ -500,9 +565,27 @@ function escapeHtml(s) {
 }
 
 function renderMarkdown(text) {
-  let html = escapeHtml(text);
+  // STEP 1: Extract fenced code blocks FIRST (before any other processing)
+  // Replace with placeholders to protect from other markdown rules
+  const codeBlocks = [];
+  let html = text.replace(/```(\w*)\n?([\s\S]*?)```/g, (match, lang, code) => {
+    const placeholder = `__CODEBLOCK_${codeBlocks.length}__`;
+    codeBlocks.push({ lang: lang || '', code: code.trim() });
+    return placeholder;
+  });
 
-  // Markdown links — smart target
+  // STEP 2: Extract inline code (single backticks)
+  const inlineCodes = [];
+  html = html.replace(/`([^`\n]+)`/g, (match, code) => {
+    const placeholder = `__INLINECODE_${inlineCodes.length}__`;
+    inlineCodes.push(code);
+    return placeholder;
+  });
+
+  // STEP 3: Escape HTML in remaining text
+  html = escapeHtml(html);
+
+  // STEP 4: Markdown links — smart target
   html = html.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, (match, label, url) => {
     const isInternal = url.includes(INTERNAL_DOMAIN);
     if (isInternal) {
@@ -512,7 +595,7 @@ function renderMarkdown(text) {
     }
   });
 
-  // Defensive bare URL autolink
+  // STEP 5: Defensive bare URL autolink
   html = html.replace(
     /(?<!["'>=])(https?:\/\/[^\s<]+)/g,
     (url) => {
@@ -523,10 +606,11 @@ function renderMarkdown(text) {
     }
   );
 
+  // STEP 6: Bold and italic
   html = html.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
   html = html.replace(/(?<!\*)\*(?!\*)([^*\n]+)\*(?!\*)/g, '<em>$1</em>');
 
-  // Bullet lists
+  // STEP 7: Bullet lists
   const lines = html.split('\n');
   const result = [];
   let inList = false;
@@ -555,13 +639,28 @@ function renderMarkdown(text) {
 
   html = result.join('\n');
 
+  // STEP 8: Paragraphs
   const blocks = html.split(/\n\s*\n/);
   html = blocks.map(b => {
     const trimmed = b.trim();
     if (!trimmed) return '';
     if (trimmed.startsWith('<ul>') || trimmed.startsWith('<ol>')) return trimmed;
+    // Don't wrap codeblock placeholders in <p>
+    if (/^__CODEBLOCK_\d+__$/.test(trimmed)) return trimmed;
     return `<p>${trimmed.replace(/\n/g, '<br>')}</p>`;
   }).join('');
+
+  // STEP 9: Restore inline code
+  html = html.replace(/__INLINECODE_(\d+)__/g, (match, idx) => {
+    return `<code>${escapeHtml(inlineCodes[parseInt(idx)])}</code>`;
+  });
+
+  // STEP 10: Restore fenced code blocks with copy buttons
+  html = html.replace(/__CODEBLOCK_(\d+)__/g, (match, idx) => {
+    const block = codeBlocks[parseInt(idx)];
+    const escaped = escapeHtml(block.code);
+    return `<pre><button class="copy-btn" data-code="${escapeHtml(block.code).replace(/"/g, '&quot;')}">Copy</button><code>${escaped}</code></pre>`;
+  });
 
   return html;
 }
@@ -584,6 +683,32 @@ function renderMessage(role, content) {
   wrap.appendChild(label);
   wrap.appendChild(body);
   $messages.appendChild(wrap);
+
+  // Wire up copy buttons inside this message
+  body.querySelectorAll('.copy-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const code = btn.getAttribute('data-code');
+      // Decode HTML entities back to plain text
+      const textarea = document.createElement('textarea');
+      textarea.innerHTML = code;
+      const decoded = textarea.value;
+
+      navigator.clipboard.writeText(decoded).then(() => {
+        btn.textContent = 'Copied!';
+        btn.classList.add('copied');
+        setTimeout(() => {
+          btn.textContent = 'Copy';
+          btn.classList.remove('copied');
+        }, 1500);
+      }).catch(err => {
+        console.error('Copy failed:', err);
+        btn.textContent = 'Failed';
+        setTimeout(() => { btn.textContent = 'Copy'; }, 1500);
+      });
+    });
+  });
+
   scrollToBottom();
 }
 
